@@ -2,9 +2,9 @@
     <!-- Logo -->
     <a href="home" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>B</b>bet</span>
+        <span class="logo-mini"><b>T</b>Chef</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>BTV</b>bet</span>
+        <span class="logo-lg"><b>Toque</b>Chef</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -15,22 +15,27 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </a>
-
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 @if(Auth::guest())
-                    <li class=" {{ (route('login') == Request::url()) ? 'active' : '' }} ">
-                        <a href="{{ Route('login') }}" class="">Connexion</a>
-                    </li>
-                    <li class="{{ (route('register') == Request::url()) ? 'active' : '' }}">
-                        <a href="{{ Route('register') }}" class="">Inscription</a>
+                    <li class="messages-menu">
+                        <a href="{{ route('login') }}">
+                            <i class="fa fa-sign-in"></i>
+                            Log In
+                        </a>
                     </li>
                 @else
-                    <li class=" {{ (route('login') == Request::url()) ? 'active' : '' }} ">
-                        <a href="{{ Route('home') }}" class="">Profil</a>
+                    <li class="messages-menu">
+                        <a href="{{ route('profile', Auth::user()->id) }}">
+                            <i class="fa fa-user"></i>
+                            Profil
+                        </a>
                     </li>
-                    <li class=" {{ (route('logout') == Request::url()) ? 'active' : '' }} ">
-                        <a href="{{ Route('logout') }}" class="">Déconexion</a>
+                    <li class="messages-menu">
+                        <a href="{{ route('logout') }}">
+                            <i class="fa fa-sign-out"></i>
+                            Log Out
+                        </a>
                     </li>
                 @endif
             </ul>
@@ -45,54 +50,45 @@
 
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
+            <form action="{{ route('search') }}" method="post" class="sidebar-form">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Recherche ...">
+                    <span class="input-group-btn">
+                <button type="submit" name="launchSearch" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+                </div>
+            </form>
             <li class="header">MENU</li>
             <!-- HOME -->
-            <li {{ (Request::is('home')) ? 'class=active' : '' }}>
+            <li {{ (Route::currentRouteName() == 'home') ? 'class=active' : '' }}>
                 <a href="{{ route('home') }}">
                     <i class="fa fa-home"></i> <span>Accueil</span>
                 </a>
             </li>
-            <!-- TOURNAMENTS -->
-            <li class=" {{ (Request::is('tournaments')) ? 'active menu-open' : '' }} treeview">
-                <a href="#">
-                    <i class="fa fa-dashboard"></i> <span>Tournois</span>
-                    <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li {{ (Request::is('tournaments')) ? 'class=active' : '' }}><a href="{{ route('tournaments.list') }}"><i class="fa fa-circle-o"></i> Liste des tournois</a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Mes tournois</a></li>
-                </ul>
-            </li>
-            <!-- TEAMS -->
-            <li class=" {{ (Request::is('teams')) ? 'active menu-open' : '' }} treeview">
-                <a href="#">
-                    <i class="fa fa-dashboard"></i> <span>Équipes</span>
-                    <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li {{ (Request::is('teams')) ? 'class=active' : '' }}><a href="{{ route('teams.list') }}"><i class="fa fa-circle-o"></i> Liste des équipes</a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Mes tournois</a></li>
-                </ul>
-            </li>
             @if(Auth::user())
-            <!-- GAMES -->
-            <li class=" {{ (Request::is('games')) ? 'active menu-open' : '' }} treeview">
-                <a href="#">
-                    <i class="fa fa-gamepad"></i> <span>Parties</span>
-                    <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+                    <li {{ (Route::currentRouteName() == 'recipes.my') ? 'class=active' : '' }}>
+                        <a href="{{ route('recipes.my') }}">
+                            <i class="fa fa-cutlery"></i> <span>Mes Recettes <small class="label bg-blue pull-right">{{ count(Recipe::where('owner_id', Auth::user()->id)->get()) }}</small></span>
+                        </a>
+                    </li>
+                <li {{ (Route::currentRouteName() == 'recipes.add') ? 'class=active' : '' }}>
+                    <a href="{{ route('recipes.add') }}">
+                        <i class="fa fa-plus"></i> <span>Ajouter une recette</span>
+                    </a>
+                </li>
+            @endif
+            <li {{ (Route::currentRouteName() == 'recipes.top') ? 'class=active' : '' }}>
+                <a href="{{ route('recipes.top') }}">
+                    <i class="fa fa-star"></i> <span>Top Recettes</span>
                 </a>
-                <ul class="treeview-menu">
-                    <li {{ (Request::is('games')) ? 'class=active' : '' }}><a href="{{ route('games.list') }}"><i class="fa fa-circle-o"></i>Mes parties</a></li>
-                    <li><a href=""><i class="fa fa-circle-o"></i> Historique</a></li>
-                </ul>
             </li>
-                @endif
+            <li {{ (Route::currentRouteName() == 'recipes.last') ? 'class=active' : '' }}>
+                <a href="{{ route('recipes.last') }}">
+                    <i class="fa fa-clock-o"></i> <span>Derniéres Recettes</span>
+                </a>
+            </li>
+
         </ul>
     </section>
     <!-- /.sidebar -->
