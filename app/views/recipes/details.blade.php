@@ -18,6 +18,11 @@
             width: 100%;
             height: 300px;
         }
+        @media print {
+            a[href]:after {
+                content: none !important;
+            }
+        }
     </style>
     <div class="col-md-8">
         <div class="box box-success">
@@ -172,8 +177,8 @@
                 <p><b>Nombre de personnes :</b>&nbsp;{{ $recipe->persons }}</p>
                 <p><b>Prix :</b>&nbsp;{{ $recipe->price }} €</p>
                 <p><b>Prix/personnes :</b>&nbsp;{{ round($recipe->price/$recipe->persons, 2) }} €</p>
-                <a href="{{ route('recipes.print',$recipe->id) }}" class="btn btn-warning btn-flat"><i
-                            class="fa fa-print"></i> Imprimer</a>
+                <a href="{{ route('recipes.print',$recipe->id) }}" class="btn btn-warning btn-flat"><i class="fa fa-download"></i> Télécharger</a>
+                <span class="btn btn-info btn-flat pull-right" onclick="window.print()"><i class="fa fa-print"></i> Imprimer</span>
             </div>
             <div class="box-footer">
 

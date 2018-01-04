@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'url' => 'http://cookomix.local',
+	'url' => 'http://toquechef.local',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -122,7 +122,6 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Barryvdh\DomPDF\ServiceProvider',
-
 	),
 
 	/*
@@ -189,7 +188,7 @@ return array(
 		'URL'               => 'Illuminate\Support\Facades\URL',
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
-        'PDF' => 'Barryvdh\DomPDF\Facade',
+        'PDF'               => 'Barryvdh\DomPDF\Facade',
 
 	),
 

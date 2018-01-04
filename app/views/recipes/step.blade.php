@@ -32,7 +32,7 @@
                         <div class="form-group {{ $errors->has('order') ? 'has-error' : ''}}">
                             <label for="order">Description de l'étape</label>
                             <textarea class="form-control" name="order" placeholder="Description de l'étape ..."
-                                      rows="5" style="resize: none;">{{ ($add) ? Input::old('order'):$step->order }} </textarea>
+                                      rows="5" style="resize: none;">{{ ($add) ? Input::old('order'):$step->order}} </textarea>
                             @if($errors->has('desc')) <span
                                     class="help-block">{{ $errors->first('order') }}</span> @endif
                         </div>
