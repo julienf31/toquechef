@@ -172,6 +172,8 @@
                 <p><b>Nombre de personnes :</b>&nbsp;{{ $recipe->persons }}</p>
                 <p><b>Prix :</b>&nbsp;{{ $recipe->price }} €</p>
                 <p><b>Prix/personnes :</b>&nbsp;{{ round($recipe->price/$recipe->persons, 2) }} €</p>
+                <a href="{{ route('recipes.print',$recipe->id) }}" class="btn btn-warning btn-flat"><i
+                            class="fa fa-print"></i> Imprimer</a>
             </div>
             <div class="box-footer">
 

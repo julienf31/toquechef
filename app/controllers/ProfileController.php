@@ -38,7 +38,7 @@ class ProfileController extends Controller
 
         if($validator->fails()){
             $data['credentialsErrors'] = true;
-            return Redirect::to('profile')->withErrors($validator)->with('credentialsErrors', 'true');
+            return Redirect::route('profile', $id)->withErrors($validator)->with('credentialsErrors', 'true');
         }
 
 
@@ -46,7 +46,11 @@ class ProfileController extends Controller
 
         if (Auth::validate(array('email' => Auth::user()->email, 'password' => $inputs['oldPassword']))) {
             if($inputs['newPassword'] == $inputs['confirmPassword']){
-
+                $user = User::find($id);
+                $user->password = Hash::make($inputs['confirmPassword']);
+                $user->save();
+                Session::flash('success-notif',"Le mot de passe à été actualisé");
+                return Redirect::route('profile', $id);
             }
             else{
                 Session::flash('warning-notif',"Les deux mots de passes ne correspondent pas");
@@ -67,9 +71,8 @@ class ProfileController extends Controller
         }
 
         $profile->location = Input::get('location');
-        $profile->birthdate = Input::get('birthdate');
+        $profile->birthdate = date('Y-d-m', strtotime(Input::get('birthdate')));
         $profile->description = Input::get('description');
-
         $profile->save();
 
         Session::flash('success-notif','Votre profil à été actualisé');

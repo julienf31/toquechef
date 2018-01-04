@@ -23,6 +23,8 @@ Route::get('/profile/{id}', array('as' => 'profile', 'uses' => 'ViewController@s
 
 Route::get('/top', array('as' => 'recipes.top', 'uses' => 'ViewController@showTopRecipes'));
 
+Route::get('/recipe/{id}/print', array('as' => 'recipes.print', 'uses' => 'RecipesController@generatePDF'));
+
 Route::get('/last', array('as' => 'recipes.last', 'uses' => 'ViewController@showLastRecipes'));
 
 Route::get('/recipe/{id}', array('as' => 'recipes.details', 'uses' => 'ViewController@showRecipeDetails'));

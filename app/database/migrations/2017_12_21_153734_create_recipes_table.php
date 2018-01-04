@@ -18,7 +18,7 @@ class CreateRecipesTable extends Migration {
             $table->string('name', 100);
             $table->string('description', 300);
             $table->integer('owner_id')->unsigned();
-            $table->integer('persons');
+            $table->integer('persons')->default(4);
             $table->integer('difficulty');
             $table->integer('price');
             $table->enum('category',Config::get('params.categories'));

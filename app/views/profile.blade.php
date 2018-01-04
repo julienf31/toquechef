@@ -18,7 +18,7 @@
                 <ul class="list-group list-group-unbordered">
                     <li class="list-group-item">
                         <b>Inscription</b> <a
-                                class="pull-right">{{ date_format(new DateTime($profile->user->created_at), "d/m/Y") }}</a>
+                                class="pull-right">{{ date_format(new DateTime($profile->created_at), "d/m/Y") }}</a>
                     </li>
                     <li class="list-group-item">
                         <b>Date de naissance</b> <a
@@ -36,9 +36,14 @@
                 <h3 class="box-title">À Propos</h3>
             </div>
             <div class="box-body">
-                <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
+                <strong><i class="fa fa-file-text margin-r-5"></i> Description</strong>
 
-                <p class="text-muted"></p>
+                <p class="text-muted">{{ $profile->description }}</p>
+
+                <hr>
+                <strong><i class="fa fa-map-marker margin-r-5"></i> Localisation</strong>
+
+                <p class="text-muted">{{ $profile->location }}</p>
 
                 <hr>
 
@@ -65,8 +70,8 @@
                 <div class="tab-content">
                     <div class="tab-pane  @if(!Session::has('credentialsErrors')) active @endif" id="settings">
                         {{ Form::open(array('route' => array('profile.edit',Auth::user()->id ), 'class' => 'form-horizontal')) }}
-                            {{ HTML::horizontal_input('firstname','Prénom', 'Entrez votre prénom', $errors, $profile->firstname) }}
-                            {{ HTML::horizontal_input('lastname','Nom', 'Entrez votre nom', $errors, $profile->lastname) }}
+                        {{ HTML::horizontal_input('firstname','Prénom', 'Entrez votre prénom', $errors, $profile->firstname) }}
+                        {{ HTML::horizontal_input('lastname','Nom', 'Entrez votre nom', $errors, $profile->lastname) }}
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label">Email</label>
 
@@ -84,10 +89,10 @@
                     </div>
                     <div class="tab-pane  @if(Session::has('credentialsErrors')) active @endif" id="credentials">
                         {{ Form::open(array('route' => array('profile.edit.credentials', Auth::user()->id ), 'class' => 'form-horizontal')) }}
-                            {{ HTML::horizontal_input('oldPassword','Ancien mot de passe', 'Tapez votre ancien mot de passe', $errors, '', 'password') }}
-                            {{ HTML::horizontal_input('newPassword','Nouveau mot de passe', 'Tapez votre ancien mot de passe', $errors, '', 'password') }}
-                            {{ HTML::horizontal_input('confirmPassword','Répetez', 'Tapez votre ancien mot de passe', $errors, '', 'password') }}
-                            <div class="form-group">
+                        {{ HTML::horizontal_input('oldPassword','Ancien mot de passe', 'Tapez votre ancien mot de passe', $errors, '', 'password') }}
+                        {{ HTML::horizontal_input('newPassword','Nouveau mot de passe', 'Tapez votre ancien mot de passe', $errors, '', 'password') }}
+                        {{ HTML::horizontal_input('confirmPassword','Répetez', 'Tapez votre ancien mot de passe', $errors, '', 'password') }}
+                        <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-success">Envoyer</button>
                             </div>
@@ -105,8 +110,8 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-map-marker"></i>
                                     </div>
-                                    <input type="text" class="form-control" name="localisation"
-                                           value="{{ Auth::user()->location }}">
+                                    <input type="text" class="form-control" name="location"
+                                           value="{{ $profile->location }}">
                                 </div>
                             </div>
                         </div>
@@ -134,21 +139,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="location" class="col-sm-3 control-label">Compétences</label>
-                            <div class="col-sm-9">
-                                <select class="form-control select2 select2-hidden-accessible" name="skills[]"
-                                        multiple="true" data-placeholder="Compétences" style="width: 100%;"
-                                        tabindex="-1" aria-hidden="true">
-
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label for="desc" class="col-sm-3 control-label">Description</label>
 
                             <div class="col-sm-9">
                                 <textarea class="form-control" rows="5" placeholder="Entrez une description ..."
-                                          style="resize: none;" name="desc">{{ Auth::user()->description }}</textarea>
+                                          style="resize: none;" name="description">{{ $profile->description }}</textarea>
                             </div>
                         </div>
                         <div class="form-group">

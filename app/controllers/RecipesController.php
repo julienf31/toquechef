@@ -225,4 +225,11 @@ class RecipesController extends BaseController
         return Redirect::route('recipes.details', $comment->recipe_id);
     }
 
+    public function generatePDF($id){
+        $recipe = Recipe::find($id);
+        $data['recipe'] = $recipe;
+        $pdf = PDF::loadView('recipes.print', $data);
+        return $pdf->download("Toque Chef - $recipe->name");
+    }
+
 }

@@ -63,38 +63,20 @@ HTML::macro('recipe', function ($recipe, $asset, $linkToRecipe, $linkToIngredien
 HTML::macro('linkProfile', function ($user) {
     ob_start();
     ?>
-        <a href=""><?= ucfirst($user->firstname).' '.strtoupper($user->lastname) ?></a>
+    <a href=""><?= ucfirst($user->firstname) . ' ' . strtoupper($user->lastname) ?></a>
     <?php
     return ob_get_clean();
 });
 
-HTML::macro('input', function($name, $label, $place, $errors, $old = null){
-   ob_start();
-   ?>
-
-    <div class="form-group <?= $errors->has($name) ? 'has-error' : '' ?>">
-        <label for="<?= $name ?>"><?= $label ?></label>
-        <input type="text" class="form-control" name="<?= $name ?>" placeholder="<?= $place ?>"
-               value="<?= $old ?>">
-        <?php if($errors->has($name)): ?>
-        <span class="help-block"><?= $errors->first($name) ?></span>
-        <?php endif; ?>
-    </div>
-
-    <?php
-    return ob_get_clean();
-});
-
-
-HTML::macro('textarea', function($name, $label, $place, $errors, $old = null){
+HTML::macro('input', function ($name, $label, $place, $errors, $old = null) {
     ob_start();
     ?>
 
     <div class="form-group <?= $errors->has($name) ? 'has-error' : '' ?>">
         <label for="<?= $name ?>"><?= $label ?></label>
-        <textarea class="form-control" name="<?= $name ?>" placeholder="<?= $place ?>"
-                  rows="5" style="resize: none;"><?= $old ?></textarea>
-        <?php if($errors->has($name)): ?>
+        <input type="text" class="form-control" name="<?= $name ?>" placeholder="<?= $place ?>"
+               value="<?= $old ?>">
+        <?php if ($errors->has($name)): ?>
             <span class="help-block"><?= $errors->first($name) ?></span>
         <?php endif; ?>
     </div>
@@ -103,19 +85,39 @@ HTML::macro('textarea', function($name, $label, $place, $errors, $old = null){
     return ob_get_clean();
 });
 
-HTML::macro('horizontal_input', function($name, $label, $place, $errors, $old = null, $type = null){
+
+HTML::macro('textarea', function ($name, $label, $place, $errors, $old = null) {
     ob_start();
     ?>
 
-    <div class="form-group <?= ($errors->has($name)) ? 'has-error':''  ?>">
+    <div class="form-group <?= $errors->has($name) ? 'has-error' : '' ?>">
+        <label for="<?= $name ?>"><?= $label ?></label>
+        <textarea class="form-control" name="<?= $name ?>" placeholder="<?= $place ?>"
+                  rows="5" style="resize: none;"><?= $old ?></textarea>
+        <?php if ($errors->has($name)): ?>
+            <span class="help-block"><?= $errors->first($name) ?></span>
+        <?php endif; ?>
+    </div>
+
+    <?php
+    return ob_get_clean();
+});
+
+HTML::macro('horizontal_input', function ($name, $label, $place, $errors, $old = null, $type = null) {
+    ob_start();
+    ?>
+
+    <div class="form-group <?= ($errors->has($name)) ? 'has-error' : '' ?>">
         <label for="<?= $name ?>" class="col-sm-2 control-label"><?= $label ?></label>
         <div class="col-sm-10">
             <input type="<?= $type ?>" class="form-control" name="<?= $name ?>"
                    value="<?= $old ?>">
         </div>
-        <?php if($errors->has($name)): ?>
-        <span class="help-block"><?= $errors->first($name) ?></span>
-        <?php endif; ?>
+        <div class="col-sm-10 col-sm-offset-2">
+            <?php if ($errors->has($name)): ?>
+                <span class="help-block"><?= $errors->first($name) ?></span>
+            <?php endif; ?>
+        </div>
     </div>
 
     <?php

@@ -20,6 +20,7 @@ class CreateProfilesTable extends Migration {
         $table->string('picture');
         $table->string('location');
         $table->date('birthdate');
+        $table->text('description');
         $table->timestamps();
 
         $table->foreign('id')->references('id')->on('users');
