@@ -37,7 +37,7 @@
             <h4>{{$errors->first()}}</h4>
         </div>
     @endif
-    <div class="login-box-body">
+    <div class="login-box-body {{ ($errors->any()) ? 'animated shake':'' }} }}">
         <p class="login-box-msg">Connexion</p>
 
         {{ Form::open(array('url' => '/login')) }}

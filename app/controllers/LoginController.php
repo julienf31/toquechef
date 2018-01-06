@@ -64,7 +64,7 @@ class LoginController extends Controller {
         $profile = new Profile();
         $profile->firstname = $inputs['firstname'];
         $profile->lastname = $inputs['lastname'];
-        $profile->picture = 'img/avatar5.png';
+        $profile->picture = 'avatar.png';
 
         $profile = $user->profile()->save($profile);
 

@@ -1,6 +1,6 @@
 <header class="main-header">
     <!-- Logo -->
-    <a href="home" class="logo">
+    <a href="{{ route('home') }}" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>T</b>Chef</span>
         <!-- logo for regular state and mobile devices -->
@@ -21,7 +21,7 @@
                     <li class="messages-menu">
                         <a href="{{ route('login') }}">
                             <i class="fa fa-sign-in"></i>
-                            Log In
+                            Connexion
                         </a>
                     </li>
                 @else

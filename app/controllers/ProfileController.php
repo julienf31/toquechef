@@ -70,6 +70,23 @@ class ProfileController extends Controller
             return Redirect::route('profile', $id);
         }
 
+        //Upload file
+        if (Input::file('profilePicture'))
+        {
+            $file = Input::file('profilePicture');
+            $destinationPath = "uploads/users/$id/";
+            $filename = 'avatar.'.$file->getClientOriginalExtension();
+            $upload_success = $file->move($destinationPath, $filename); //move img to storage in uploads/users/...
+            if(!$upload_success) {
+                return Redirect::to('profile');
+            }
+            $file = true;
+        }
+
+        if($file){
+            $profile->picture = $filename;
+        }
+
         $profile->location = Input::get('location');
         $profile->birthdate = date('Y-d-m', strtotime(Input::get('birthdate')));
         $profile->description = Input::get('description');
