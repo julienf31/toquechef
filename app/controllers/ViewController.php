@@ -7,7 +7,6 @@ class ViewController extends BaseController
     public function showHome()
     {
         return View::make('home');
-
     }
 
     //Login view
@@ -50,6 +49,15 @@ class ViewController extends BaseController
         return View::make('recipes.my', $data);
     }
 
+    //Favorites recipes view
+    public function showFavorites()
+    {
+        $data['hasMainPage'] = true;
+        $data['recipes'] = Profile::find(Auth::user()->id)->favorites()->with('recipe')->get();
+
+        return View::make('recipes.favorites', $data);
+    }
+
     //Last recipes view
     public function showLastRecipes()
     {
@@ -78,13 +86,20 @@ class ViewController extends BaseController
         $data['steps'] = null;
         if (Auth::user()) {
             $like = Like::where('recipe_id', $id)->where('profile_id', Auth::user()->id)->first();
+            $favorite = Favorite::where('recipe_id', $id)->where('profile_id', Auth::user()->id)->first();
             if ($like) {
                 $data['like'] = true;
             } else {
                 $data['like'] = false;
             }
+            if ($favorite) {
+                $data['favorite'] = true;
+            } else {
+                $data['favorite'] = false;
+            }
         } else {
             $data['like'] = false;
+            $data['favorite'] = false;
         }
 
         return View::make('recipes.details', $data);

@@ -203,6 +203,21 @@ class RecipesController extends BaseController
         return Redirect::route('recipes.details', $recipe->id);
     }
 
+    public function favoriteRecipe($id){
+        $favorite = Favorite::where('recipe_id',$id)->where('profile_id', Auth::user()->id)->first();
+        $recipe = Recipe::find($id);
+        if(!$favorite){
+            $favorite = new Favorite();
+            $favorite->recipe_id = $recipe->id;
+            $favorite->profile_id = Auth::user()->id;
+            $favorite->save();
+        }else{
+            $favorite->delete();
+        }
+
+        return Redirect::route('recipes.details', $recipe->id);
+    }
+
     public function addComment($id){
         $recipe = Recipe::find($id);
 

@@ -6,7 +6,7 @@ class IngredientsTableSeeder extends Seeder
     {
         DB::table('ingredients')->delete();
 
-        $ingredients = file(asset('ingredients.txt'));
+        $ingredients = file('public/ingredients.txt');
         $data = [];
         foreach ($ingredients as $ingredient) {
             $data[]['name'] = $ingredient;

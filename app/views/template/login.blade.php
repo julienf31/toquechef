@@ -30,24 +30,22 @@
     <div class="login-logo">
         <a href="{{ route('home') }}"><b>Toque</b>Chef</a>
     </div>
-    @if($errors->any())
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4><i class="icon fa fa-warning"></i> Erreur !</h4>
-            <h4>{{$errors->first()}}</h4>
-        </div>
-    @endif
     <div class="login-box-body {{ ($errors->any()) ? 'animated shake':'' }} }}">
         <p class="login-box-msg">Connexion</p>
-
         {{ Form::open(array('url' => '/login')) }}
-        <div class="form-group has-feedback">
-            <input name="email" type="email" class="form-control" placeholder="Email">
+        <div class="form-group has-feedback {{ $errors->has('email') ? 'has-error' : ''}}">
+            <input name="email" type="email" class="form-control" placeholder="Email" value="{{ Input::old('email') }}">
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            @if($errors->has('email'))
+                <span class="help-block">{{ $errors->first('email') }}</span>
+            @endif
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : ''}}">
             <input name="password" type="password" class="form-control" placeholder="Mot de passe">
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            @if($errors->has('password'))
+                <span class="help-block">{{ $errors->first('email') }}</span>
+            @endif
         </div>
         <div class="row">
             <div class="col-xs-4 pull-right">
@@ -70,16 +68,7 @@
 <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-notify.min.js') }}"></script>
 
-<script type="text/javascript">
-    @if (Session::has('success-notif'))
-    $.notify({
-        // options
-        message: '{{ Session::get('success-notif') }}'
-    }, {
-        // settings
-        type: 'success'
-    });
-    @endif
-</script>
+@include('template.parts.notifications')
+
 </body>
 </html>

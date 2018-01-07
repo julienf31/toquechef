@@ -44,6 +44,8 @@ Route::group(array('before' => 'auth'), function () {
 
     Route::get('/my', array('as' => 'recipes.my', 'uses' => 'ViewController@showMyRecipes'));
 
+    Route::get('/favorites', array('as' => 'recipes.favorites', 'uses' => 'ViewController@showFavorites'));
+
     Route::get('/add', array('as' => 'recipes.add', 'uses' => 'ViewController@showAddRecipe'));
     Route::post('/add', array('as' => 'recipes.add', 'uses' => 'RecipesController@addRecipes'));
 
@@ -67,6 +69,7 @@ Route::group(array('before' => 'auth'), function () {
     Route::post('/step/{id}/edit', array('as' => 'recipes.step.edit', 'uses' => 'RecipesController@editStep'));
 
     Route::get('/recipe/{id}/like', array('as' => 'recipes.like', 'uses' => 'RecipesController@likeRecipe'));
+    Route::get('/recipe/{id}/favorite', array('as' => 'recipes.favorite.add', 'uses' => 'RecipesController@favoriteRecipe'));
 
     Route::post('/recipe/{id}/comment', array('as' => 'comments.add', 'uses' => 'RecipesController@addComment'));
     Route::get('/comment/{id}/delete', array('as' => 'comments.delete', 'uses' => 'RecipesController@deleteComment'));

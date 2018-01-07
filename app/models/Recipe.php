@@ -32,4 +32,9 @@ class Recipe extends Eloquent  {
     public function comments(){
         return $this->hasMany('Comment');
     }
+
+    public function favorites(){
+        return $this->hasMany('Favorite');
+    }
+
 }

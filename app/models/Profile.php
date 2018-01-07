@@ -14,4 +14,8 @@ class Profile extends Eloquent {
     public function recipes(){
         return $this->hasMany('Recipe', 'owner_id');
     }
+
+    public function favorites(){
+        return $this->hasMany('Favorite');
+    }
 }

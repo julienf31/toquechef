@@ -4,7 +4,6 @@ class LoginController extends Controller {
 
     public function login()
     {
-        // validate the info, create rules for the inputs
         $rules = array(
             'email'    => 'required|email',
             'password' => 'required|alphaNum|min:3'
@@ -12,9 +11,8 @@ class LoginController extends Controller {
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('login')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+            Session::flash('danger-notif',"Une erreur est survenue lors de l\'inscription, veuillez vérifier les champs");
+            return Redirect::to('login')->withErrors($validator)->withInput(Input::except('password'));
         } else {
 
             $userdata = array(
@@ -25,8 +23,8 @@ class LoginController extends Controller {
             if (Auth::attempt($userdata)) {
                 return Redirect::route('home');
             } else {
-                return Redirect::to('login')
-                    ->withErrors('Mauvais identifiant / Mot de passe')
+                Session::flash('danger-notif',"Mauvais identifiant / mot de passe");
+                return Redirect::route('login')
                     ->withInput(Input::except('password'));
             }
         }
@@ -65,6 +63,9 @@ class LoginController extends Controller {
         $profile->firstname = $inputs['firstname'];
         $profile->lastname = $inputs['lastname'];
         $profile->picture = 'avatar.png';
+
+        File::makeDirectory("uploads/users/$user->id");
+        File::copy('img/avatar.png',"uploads/users/$user->id/avatar.png");
 
         $profile = $user->profile()->save($profile);
 

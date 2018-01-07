@@ -54,7 +54,8 @@
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Recherche ...">
                     <span class="input-group-btn">
-                <button type="submit" name="launchSearch" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="submit" name="launchSearch" id="search-btn" class="btn btn-flat"><i
+                            class="fa fa-search"></i>
                 </button>
               </span>
                 </div>
@@ -67,11 +68,18 @@
                 </a>
             </li>
             @if(Auth::user())
-                    <li {{ (Route::currentRouteName() == 'recipes.my') ? 'class=active' : '' }}>
-                        <a href="{{ route('recipes.my') }}">
-                            <i class="fa fa-cutlery"></i> <span>Mes Recettes <small class="label bg-blue pull-right">{{ count(Recipe::where('owner_id', Auth::user()->id)->get()) }}</small></span>
-                        </a>
-                    </li>
+                <li {{ (Route::currentRouteName() == 'recipes.my') ? 'class=active' : '' }}>
+                    <a href="{{ route('recipes.my') }}">
+                        <i class="fa fa-cutlery"></i> <span>Mes Recettes <small
+                                    class="label bg-blue pull-right">{{ count(Recipe::where('owner_id', Auth::user()->id)->get()) }}</small></span>
+                    </a>
+                </li>
+                <li {{ (Route::currentRouteName() == 'recipes.favorites') ? 'class=active' : '' }}>
+                    <a href="{{ route('recipes.favorites') }}">
+                        <i class="fa fa-heart"></i> <span>Mes Favoris</span><small
+                                class="label bg-red pull-right">{{ count(Favorite::where('profile_id', Auth::user()->id)->get()) }}</small></span>
+                    </a>
+                </li>
                 <li {{ (Route::currentRouteName() == 'recipes.add') ? 'class=active' : '' }}>
                     <a href="{{ route('recipes.add') }}">
                         <i class="fa fa-plus"></i> <span>Ajouter une recette</span>

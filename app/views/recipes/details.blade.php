@@ -64,9 +64,12 @@
                 <div class="row">
                     <div class="col-xs-12">
                         @if(Auth::user())
+                            <a href="{{ route('recipes.favorite.add',$recipe->id) }}"
+                               class="btn btn-danger btn-flat pull-left {{ ($favorite) ? 'active':'' }}"><i
+                                        class="fa fa-heart{{ ($favorite) ? '':'-o' }}"></i> Favoris</a>
                             <a href="{{ route('recipes.like',$recipe->id) }}"
                                class="btn btn-facebook btn-flat pull-right {{ ($like) ? 'active':'' }}"><i
-                                        class="fa fa-heart{{ ($like) ? '':'-o' }}"></i> J'aime ( {{ $recipe->likes }}
+                                        class="fa fa-thumbs{{ ($like) ? '-up':'-o-up' }}"></i> J'aime ( {{ $recipe->likes }}
                                 )</a>
                         @else
                             <span class="pull-right"> <i class="fa fa-thumbs-up text-blue"></i> <?= $recipe->likes ?>

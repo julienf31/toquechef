@@ -70,6 +70,7 @@ class ProfileController extends Controller
             return Redirect::route('profile', $id);
         }
 
+        $file = false;
         //Upload file
         if (Input::file('profilePicture'))
         {
