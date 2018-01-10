@@ -30,6 +30,7 @@
         </form>
         <p class="margin">Saisissez un mot clef, un nom de recette, ou même un ingrédient, nous nous occupons de trouver
             la recette quil vous faut</p>
+        <p class="margin">Pour faire une recherche multiple, séparez les mots clef par un espace</p>
     </div>
     <div class="col-md-12 no-padding">
         <h3 class="text-center">Quelques chiffres</h3><br>

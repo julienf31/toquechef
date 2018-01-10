@@ -25,45 +25,43 @@
         }
     </style>
     <div class="container-fluid">
-        <h2>Recettes <span class="badge bg-green">{{ count($recipes) }}</span></h2>
-        <hr style="border-color: #00a65a;">
-        <div class="row">
-            @if(count($recipes)>0)
+        @if(count($recipes) > 0)
+            <h2>Recettes <span class="badge bg-green">{{ count($recipes) }}</span></h2>
+            <hr style="border-color: #00a65a;">
+            <div class="row">
                 @foreach($recipes as $recipe)
                     {{ HTML::recipe($recipe,asset('uploads/recipes/'),route('recipes.details',$recipe->id),route('search.ingredients',''),4) }}
                 @endforeach
-            @else
-                <div class="text-center">
-                    Pas de résultat de recettes pour cette recherche
-                </div>
-            @endif
-        </div>
-        <h2>Ingrédients <span class="badge bg-green">{{ count($ingredients) }}</span></h2>
-        <hr style="border-color: #00a65a;">
-        <div class="row">
-            @if(count($ingredients)>0)
+            </div>
+        @endif
+        @if(count($ingredients) > 0)
+            <h2>Ingrédients <span class="badge bg-green">{{ count($ingredients) }}</span></h2>
+            <hr style="border-color: #00a65a;">
+            <div class="row">
                 @foreach($ingredients as $recipe)
                     {{ HTML::recipe($recipe,asset('uploads/recipes/'),route('recipes.details',$recipe->id),route('search.ingredients',''),4) }}
                 @endforeach
-            @else
-                <div class="text-center">
-                    Pas de résultat d'ingrédients pour cette recherche
+            </div>
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1 text-center">
+                    Ingrédients similaires :<br >
+                    @foreach($similarIngredients as $similarIngredient)
+                        <a href="{{ route('search.ingredients', $similarIngredient->id) }}">
+                            <small class="label bg-green">{{ $similarIngredient->name }}</small>
+                        </a>&nbsp;
+                    @endforeach
                 </div>
-            @endif
-        </div>
-        <h2>Catégories <span class="badge bg-green">{{ count($categories) }}</span></h2>
-        <hr style="border-color: #00a65a;">
-        <div class="row">
-            @if(count($categories)>0)
+            </div>
+        @endif
+        @if(count($categories) > 0)
+            <h2>Catégories <span class="badge bg-green">{{ count($categories) }}</span></h2>
+            <hr style="border-color: #00a65a;">
+            <div class="row">
                 @foreach($categories as $recipe)
                     {{ HTML::recipe($recipe,asset('uploads/recipes/'),route('recipes.details',$recipe->id),route('search.ingredients',''),4) }}
                 @endforeach
-            @else
-                <div class="text-center">
-                    Pas de résultat de catégories pour cette recherche
-                </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 
 @stop

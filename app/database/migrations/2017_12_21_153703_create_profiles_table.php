@@ -17,7 +17,7 @@ class CreateProfilesTable extends Migration {
         $table->increments('id')->unsigned();
         $table->string('firstname', 30);
         $table->string('lastname', 30);
-        $table->string('picture');
+        $table->string('picture')->default('avatar.png');
         $table->string('location');
         $table->date('birthdate');
         $table->text('description');

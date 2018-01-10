@@ -6,13 +6,19 @@ class SearchController extends BaseController
     public function search()
     {
         $params = Input::get('search');
+        $multiple = explode(' ', $params);
+
+        if (sizeof($multiple) > 1) {
+            $data['ingredients'] = $this->launchMultipleIngredientsSearch($multiple);
+        }else{
+            $data['ingredients'] = $this->launchIngredientsSearch($params);
+        }
         $data['recipes'] = $this->launchRecipesSearch($params);
-        $data['ingredients'] = $this->launchIngredientsSearch($params);
         $data['categories'] = $this->launchCategoriesSearch($params);
-
         $data['keyword'] = $params;
-
         $data['count'] = count($data['recipes']) + count($data['ingredients']) + count($data['categories']);
+
+        $data['similarIngredients'] = Ingredient::where('name', 'like', '%'.$params.'%')->get();
 
         return View::make('search.results', $data);
 
@@ -31,6 +37,19 @@ class SearchController extends BaseController
         $results = Recipe::whereHas('ingredients', function ($query) use ($params) {
             $query->where('name', 'like', '%' . $params . '%');
         })->get();
+
+        return $results;
+    }
+
+    public function launchMultipleIngredientsSearch($params)
+    {
+        $query = Recipe::query();
+        foreach ($params as $param) {
+            $query = $query->whereHas('ingredients', function ($query) use ($param) {
+                $query->where('name','like','%'.$param.'%');
+            });
+        }
+        $results = $query->get();
 
         return $results;
     }

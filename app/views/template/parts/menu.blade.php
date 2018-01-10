@@ -51,8 +51,8 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <form action="{{ route('search') }}" method="post" class="sidebar-form">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Recherche ...">
+                <div class="input-group" data-toggle="tooltip" title="Pour effectuer une recherche multiple, séparez les mots clef par un espace" data-placement="bottom">
+                    <input type="text" name="search" class="form-control" placeholder="Recherche ..." value="{{ (isset($keyword)) ? $keyword:'' }}" >
                     <span class="input-group-btn">
                 <button type="submit" name="launchSearch" id="search-btn" class="btn btn-flat"><i
                             class="fa fa-search"></i>

@@ -84,6 +84,11 @@
         $('.sidebar-menu').tree()
     });
 </script>
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 
 @include('template.parts.notifications')
 
