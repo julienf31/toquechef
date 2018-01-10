@@ -8,7 +8,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 class Comment extends Eloquent  {
 
     var $fillable = ['id','recipe_id','profile_id','comment'];
-
+    
     public function recipe(){
         return $this->belongsTo('Recipe');
     }

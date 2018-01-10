@@ -1,8 +1,23 @@
 <?php
 
+/**
+ * Ingredients Controller
+ *
+ * Method for ingredients CRUD management
+ *
+ * @copyright  2018 Toque Chef
+ */
 class IngredientsController extends BaseController
 {
 
+    /**
+     *
+     * Add Ingredient
+     * Auth Required
+     *
+     * @return      Redirect
+     *
+     */
     public function addIngredient()
     {
         $ingredient = Input::get('ingredientName');

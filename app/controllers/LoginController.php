@@ -1,42 +1,74 @@
 <?php
 
-class LoginController extends Controller {
+/**
+ * Login Controller
+ *
+ * Method for login / register / logout
+ *
+ * @copyright  2018 Toque Chef
+ */
+class LoginController extends Controller
+{
 
+    /**
+     *
+     * Login
+     *
+     * @return      Redirect
+     *
+     */
     public function login()
     {
         $rules = array(
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|alphaNum|min:3'
         );
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
-            Session::flash('danger-notif',"Une erreur est survenue lors de l\'inscription, veuillez vérifier les champs");
+            Session::flash('danger-notif', "Une erreur est survenue lors de l\'inscription, veuillez vérifier les champs");
             return Redirect::to('login')->withErrors($validator)->withInput(Input::except('password'));
         } else {
 
             $userdata = array(
-                'email' 	=> Input::get('email'),
-                'password' 	=> Input::get('password')
+                'email' => Input::get('email'),
+                'password' => Input::get('password')
             );
 
             if (Auth::attempt($userdata)) {
                 return Redirect::route('home');
             } else {
-                Session::flash('danger-notif',"Mauvais identifiant / mot de passe");
+                Session::flash('danger-notif', "Mauvais identifiant / mot de passe");
                 return Redirect::route('login')
                     ->withInput(Input::except('password'));
             }
         }
     }
 
-    public function logout() {
+    /**
+     *
+     * Logout
+     * Auth Required
+     *
+     * @return      Redirect
+     *
+     */
+    public function logout()
+    {
         Auth::logout();
         return Redirect::route('home');
     }
 
-    public function register(){
-        $inputs = Input::only('firstname','lastname','email','password','passwordRepeat');
+    /**
+     *
+     * Register
+     *
+     * @return      Redirect
+     *
+     */
+    public function register()
+    {
+        $inputs = Input::only('firstname', 'lastname', 'email', 'password', 'passwordRepeat');
 
         $rules = array(
             'firstname' => 'required|min:3',
@@ -46,17 +78,16 @@ class LoginController extends Controller {
             'passwordRepeat' => 'required|min:6|same:password',
         );
 
-        $validator = Validator::make($inputs,$rules);
+        $validator = Validator::make($inputs, $rules);
 
-        if ($validator->fails())
-        {
-            Session::flash('danger-notif',"Une erreur est survenue lors de l\'inscription, veuillez vérifier les champs");
+        if ($validator->fails()) {
+            Session::flash('danger-notif', "Une erreur est survenue lors de l\'inscription, veuillez vérifier les champs");
             return Redirect::to('register')->withErrors($validator)->withInput(Input::all());
         }
 
         $user = new User();
         $user->email = $inputs['email'];
-        $user->password =  Hash::make($inputs['password']);
+        $user->password = Hash::make($inputs['password']);
         $user->save();
 
         $profile = new Profile();
@@ -65,11 +96,11 @@ class LoginController extends Controller {
         $profile->picture = 'avatar.png';
 
         File::makeDirectory("uploads/users/$user->id");
-        File::copy('img/avatar.png',"uploads/users/$user->id/avatar.png");
+        File::copy('img/avatar.png', "uploads/users/$user->id/avatar.png");
 
         $profile = $user->profile()->save($profile);
 
-        Session::flash('success-notif','Votre inscription à été validée, vous pouvez vous connecter');
+        Session::flash('success-notif', 'Votre inscription à été validée, vous pouvez vous connecter');
         return Redirect::to('login');
     }
 }

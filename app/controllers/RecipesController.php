@@ -1,10 +1,45 @@
 <?php
 
+/**
+ * Recipe Controller
+ *
+ * Method for recipes management
+ *
+ * @copyright  2018 Toque Chef
+ */
 class RecipesController extends BaseController
 {
 
-    //Add recipes function
-    // Check each files and upload only img
+    /**
+     *
+     * Add comment to recipe
+     * Auth Required
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
+    public function addComment($id)
+    {
+        $recipe = Recipe::find($id);
+
+        $comment = new Comment();
+        $comment->recipe_id = $recipe->id;
+        $comment->profile_id = Auth::user()->id;
+        $comment->comment = Input::get('comment');
+        $comment->save();
+
+        return Redirect::route('recipes.details', $recipe->id);
+    }
+
+    /**
+     *
+     * Add Recipe
+     * Auth Required
+     *
+     * @return      Redirect
+     *
+     */
     public function addRecipes()
     {
         Input::flashExcept('img');
@@ -18,8 +53,7 @@ class RecipesController extends BaseController
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return Redirect::route('recipes.add')->withErrors($validator)->withInput();
         }
 
@@ -68,10 +102,61 @@ class RecipesController extends BaseController
             $ing->save();
         }
 
-
         return Redirect::route('home');
     }
 
+    /**
+     *
+     * Add step to recipe
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
+    public function addStep($id)
+    {
+        $recipe = Recipe::find($id);
+        if (Auth::user()->id != $recipe->owner_id) {
+            return Redirect::back();
+        }
+        $step = new Step();
+        $step->recipe_id = $recipe->id;
+        $step->order = Input::get('order');
+        $step->save();
+
+        return Redirect::route('recipes.details', $recipe->id);
+    }
+
+    /**
+     *
+     * Delete comment
+     * Auth Required, user()->id must match with comment->owner
+     *
+     * @param       integer $id Comment id
+     * @return      Redirect
+     *
+     */
+    public function deleteComment($id)
+    {
+        $comment = Comment::find($id);
+        if (Auth::user()->id != $comment->profile_id) {
+            return Redirect::back();
+        }
+        $comment->delete();
+
+        return Redirect::route('recipes.details', $comment->recipe_id);
+    }
+
+    /**
+     *
+     * Delete Recipe
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
     public function deleteRecipe($id)
     {
         $recipe = Recipe::find($id);
@@ -80,6 +165,36 @@ class RecipesController extends BaseController
         return Redirect::route('recipes.my');
     }
 
+    /**
+     *
+     * Delete step
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @param       integer $step_id Step id
+     * @return      Redirect
+     *
+     */
+    public function deleteStep($step_id)
+    {
+        $step = Step::find($step_id);
+        if (Auth::user()->id != $step->recipe->owner_id) {
+            return Redirect::back();
+        }
+        $recipe = $step->recipe_id;
+        $step->delete();
+
+        return Redirect::route('recipes.details', $recipe);
+    }
+
+    /**
+     *
+     * Edit Recipe
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
     public function editRecipe($id)
     {
         Input::flashExcept('img');
@@ -92,14 +207,13 @@ class RecipesController extends BaseController
 
         $validator = Validator::make(Input::all(), $rules);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return Redirect::route('recipes.edit', $id)->withErrors($validator)->withInput();
         }
 
         $recipe = Recipe::find($id);
 
-        if(Auth::user()->id != $recipe->owner_id){
+        if (Auth::user()->id != $recipe->owner_id) {
             return Redirect::back();
         }
         $recipe->name = Input::get('name');
@@ -135,10 +249,109 @@ class RecipesController extends BaseController
         return Redirect::route('recipes.details', $id);
     }
 
+    /**
+     *
+     * Edit Recipe step
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @param       integer $id Step id
+     * @return      Redirect
+     *
+     */
+    public function editStep($id)
+    {
+        $step = Step::find($id);
+        if (Auth::user()->id != $step->recipe->owner_id) {
+            return Redirect::back();
+        }
+        $step->order = Input::get('order');
+        $step->save();
+
+        return Redirect::route('recipes.details', $step->recipe_id);
+    }
+
+    /**
+     *
+     * Add / Remove Recipe to favorite
+     * Auth Required
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
+    public function favoriteRecipe($id)
+    {
+        $favorite = Favorite::where('recipe_id', $id)->where('profile_id', Auth::user()->id)->first();
+        $recipe = Recipe::find($id);
+        if (!$favorite) {
+            $favorite = new Favorite();
+            $favorite->recipe_id = $recipe->id;
+            $favorite->profile_id = Auth::user()->id;
+            $favorite->save();
+        } else {
+            $favorite->delete();
+        }
+
+        return Redirect::route('recipes.details', $recipe->id);
+    }
+
+    /**
+     *
+     * Generate PDF with recipe details
+     *
+     * @param       integer $id Recipe id
+     * @return      PDF
+     *
+     */
+    public function generatePDF($id)
+    {
+        $recipe = Recipe::find($id);
+        $data['recipe'] = $recipe;
+        $pdf = PDF::loadView('recipes.print', $data);
+        return $pdf->download("Toque Chef - $recipe->name");
+    }
+
+    /**
+     *
+     * Like / Unlike Recipe
+     * Auth Required
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
+    public function likeRecipe($id)
+    {
+        $like = Like::where('recipe_id', $id)->where('profile_id', Auth::user()->id)->first();
+        $recipe = Recipe::find($id);
+        if (!$like) {
+            $like = new Like();
+            $like->recipe_id = $recipe->id;
+            $like->profile_id = Auth::user()->id;
+            $like->save();
+            $recipe->likes++;
+        } else {
+            $like->delete();
+            $recipe->likes--;
+        }
+        $recipe->save();
+
+        return Redirect::route('recipes.details', $recipe->id);
+    }
+
+    /**
+     *
+     * Manage Ingredients Quantity
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @param       integer $id Recipe id
+     * @return      Redirect
+     *
+     */
     public function manageQuantity($id)
     {
         $recipe = Recipe::find($id);
-        if(Auth::user()->id != $recipe->owner_id){
+        if (Auth::user()->id != $recipe->owner_id) {
             return Redirect::back();
         }
         foreach ($recipe->ingredients as $ingredient) {
@@ -150,104 +363,15 @@ class RecipesController extends BaseController
         return Redirect::route('recipes.details', $id);
     }
 
-    public function addStep($id){
-        $recipe = Recipe::find($id);
-        if(Auth::user()->id != $recipe->owner_id){
-            return Redirect::back();
-        }
-        $step = new Step();
-        $step->recipe_id = $recipe->id;
-        $step->order = Input::get('order');
-        $step->save();
-
-        return Redirect::route('recipes.details', $recipe->id);
-    }
-
-    public function editStep($id){
-        $step = Step::find($id);
-        if(Auth::user()->id != $step->recipe->owner_id){
-            return Redirect::back();
-        }
-        $step->order = Input::get('order');
-        $step->save();
-
-        return Redirect::route('recipes.details', $step->recipe_id);
-    }
-
-    public function deleteStep($step_id){
-        $step = Step::find($step_id);
-        if(Auth::user()->id != $step->recipe->owner_id){
-            return Redirect::back();
-        }
-        $recipe = $step->recipe_id;
-        $step->delete();
-
-        return Redirect::route('recipes.details',$recipe);
-    }
-
-    public function likeRecipe($id){
-        $like = Like::where('recipe_id',$id)->where('profile_id', Auth::user()->id)->first();
-        $recipe = Recipe::find($id);
-        if(!$like){
-            $like = new Like();
-            $like->recipe_id = $recipe->id;
-            $like->profile_id = Auth::user()->id;
-            $like->save();
-            $recipe->likes++;
-        }else{
-            $like->delete();
-            $recipe->likes--;
-        }
-        $recipe->save();
-
-        return Redirect::route('recipes.details', $recipe->id);
-    }
-
-    public function favoriteRecipe($id){
-        $favorite = Favorite::where('recipe_id',$id)->where('profile_id', Auth::user()->id)->first();
-        $recipe = Recipe::find($id);
-        if(!$favorite){
-            $favorite = new Favorite();
-            $favorite->recipe_id = $recipe->id;
-            $favorite->profile_id = Auth::user()->id;
-            $favorite->save();
-        }else{
-            $favorite->delete();
-        }
-
-        return Redirect::route('recipes.details', $recipe->id);
-    }
-
-    public function addComment($id){
-        $recipe = Recipe::find($id);
-
-        $comment = new Comment();
-        $comment->recipe_id = $recipe->id;
-        $comment->profile_id = Auth::user()->id;
-        $comment->comment = Input::get('comment');
-        $comment->save();
-
-        return Redirect::route('recipes.details', $recipe->id);
-    }
-
-    public function deleteComment($id){
-        $comment = Comment::find($id);
-        if(Auth::user()->id != $comment->profile_id){
-            return Redirect::back();
-        }
-        $comment->delete();
-
-        return Redirect::route('recipes.details', $comment->recipe_id);
-    }
-
-    public function generatePDF($id){
-        $recipe = Recipe::find($id);
-        $data['recipe'] = $recipe;
-        $pdf = PDF::loadView('recipes.print', $data);
-        return $pdf->download("Toque Chef - $recipe->name");
-    }
-
-    public function randomRecipe(){
+    /**
+     *
+     * Get Random Recipe ID
+     *
+     * @return      Redirect
+     *
+     */
+    public function randomRecipe()
+    {
         $recipe = Recipe::orderBy(DB::raw('RAND()'))->first();
         return Redirect::route('recipes.details', $recipe->id);
     }
