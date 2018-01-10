@@ -85,9 +85,9 @@
                 </div>
             </div>
             <div class="box-footer">
-                <a href="{{ route('recipes.my') }}" class="btn btn-danger">Retour</a>
-                <button type="submit" name="submitButton" class="btn btn-success pull-right">Ajouter</button>
-                <button type="reset" class="btn btn-warning pull-right margin-r-5">Vider</button>
+                <a href="{{ route('recipes.my') }}" class="btn btn-danger btn-flat">Retour</a>
+                <button type="submit" name="submitButton" class="btn btn-success pull-right btn-flat">Ajouter</button>
+                <button type="reset" class="btn btn-warning pull-right margin-r-5 btn-flat">Vider</button>
             </div>
             {{ Form::close() }}
         </div>

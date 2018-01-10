@@ -9,7 +9,10 @@ class SearchController extends BaseController
         $data['recipes'] = $this->launchRecipesSearch($params);
         $data['ingredients'] = $this->launchIngredientsSearch($params);
         $data['categories'] = $this->launchCategoriesSearch($params);
+
         $data['keyword'] = $params;
+
+        $data['count'] = count($data['recipes']) + count($data['ingredients']) + count($data['categories']);
 
         return View::make('search.results', $data);
 
@@ -39,7 +42,8 @@ class SearchController extends BaseController
         return $results;
     }
 
-    public function searchIngredients($id){
+    public function searchIngredients($id)
+    {
         $ingredient = Ingredient::find($id);
         $data['recipes'] = $this->launchIngredientsSearch($ingredient->name);
         $data['keyword'] = $ingredient->name;
@@ -47,7 +51,8 @@ class SearchController extends BaseController
         return View::make('search.ingredients', $data);
     }
 
-    public function searchCategory($name){
+    public function searchCategory($name)
+    {
         $data['recipes'] = $this->launchCategoriesSearch($name);
         $data['keyword'] = $name;
 

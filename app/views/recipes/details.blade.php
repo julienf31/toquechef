@@ -18,6 +18,7 @@
             width: 100%;
             height: 300px;
         }
+
         @media print {
             a[href]:after {
                 content: none !important;
@@ -69,7 +70,8 @@
                                         class="fa fa-heart{{ ($favorite) ? '':'-o' }}"></i> Favoris</a>
                             <a href="{{ route('recipes.like',$recipe->id) }}"
                                class="btn btn-facebook btn-flat pull-right {{ ($like) ? 'active':'' }}"><i
-                                        class="fa fa-thumbs{{ ($like) ? '-up':'-o-up' }}"></i> J'aime ( {{ $recipe->likes }}
+                                        class="fa fa-thumbs{{ ($like) ? '-up':'-o-up' }}"></i> J'aime
+                                ( {{ $recipe->likes }}
                                 )</a>
                         @else
                             <span class="pull-right"> <i class="fa fa-thumbs-up text-blue"></i> <?= $recipe->likes ?>
@@ -119,28 +121,40 @@
                 @foreach($recipe->comments as $comment)
                     <div class="post">
                         <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="{{ asset('uploads/users/'.$comment->profile_id.'/'.$comment->profile->picture) }}" alt="user image">
+                            <img class="img-circle img-bordered-sm"
+                                 src="{{ asset('uploads/users/'.$comment->profile_id.'/'.$comment->profile->picture) }}"
+                                 alt="user image">
                             <span class="username">
                                 <a href="{{ route('profile', $comment->profile->id) }}">{{ ucfirst($comment->profile->firstname).' '.strtoupper($comment->profile->lastname) }}</a>
                                 @if(Auth::user() && ($comment->profile_id == Auth::user()->id))
-                                    <a href="{{ route('comments.delete', $comment->id) }}" class="pull-right btn-box-tool"><i class="fa fa-trash text-red"></i></a>
+                                    <a href="{{ route('comments.delete', $comment->id) }}"
+                                       class="pull-right btn-box-tool"><i class="fa fa-trash text-red"></i></a>
                                 @endif
                             </span>
                             <span class="description">{{ $comment->created_at }}</span>
                         </div>
                         <p>
+                            @if(preg_match("~(http.*\.)(jpe?g|png|[tg]iff?|svg)~i", $comment->comment, $img))
+                                {{ $comment->comment }}
+
+                                <img class="img-fluid" src="{{ $img[0] }}" style="max-width:100%">
+                                @else
                             {{ $comment->comment }}
+                                @endif
                         </p>
                     </div>
                 @endforeach
                 @if(Auth::user())
+                    <hr>
                     {{ Form::open(array('route' => array('comments.add', $recipe->id))) }}
+                    <label>Ajouter un commentaire</label>
                     <div class="form-group margin-bottom-none">
                         <div class="col-sm-9">
                             <input class="form-control input-sm" name="comment" placeholder="Commentaire ...">
                         </div>
                         <div class="col-sm-3">
-                            <button type="submit" class="btn btn-danger pull-right btn-block btn-sm">Envoyer</button>
+                            <button type="submit" class="btn btn-danger pull-right btn-block btn-sm btn-flat">Envoyer
+                            </button>
                         </div>
                     </div>
                     {{ Form::close() }}
@@ -174,13 +188,18 @@
             </div>
             <div class="box-body">
                 <p><b>Créée le :</b> <span class="text-light-blue">{{ $recipe->created_at }}</span></p>
-                <p><b>Chef cuisto :</b> <a href="{{ route('profile', $recipe->owner->id) }}"><span class="text-light-blue">{{ $recipe->owner->firstname.' '.$recipe->owner->lastname }}</span></a></p>
-                <p><b>Type :</b> <a href="{{ route('search.category', $recipe->category) }}"><span class="text-light-blue">{{ $recipe->category }}</span></p></a>
-                <p><b style="display: inline-block">Difficultée :</b> @for($i = 0; $i < $recipe->difficulty; $i++) <img src="{{asset('img/icons/chef.png')}}" style="width: 15px;"> @endfor</p>
+                <p><b>Chef cuisto :</b> <a href="{{ route('profile', $recipe->owner->id) }}"><span
+                                class="text-light-blue">{{ $recipe->owner->firstname.' '.$recipe->owner->lastname }}</span></a>
+                </p>
+                <p><b>Type :</b> <a href="{{ route('search.category', $recipe->category) }}"><span
+                                class="text-light-blue">{{ $recipe->category }}</span></p></a>
+                <p><b style="display: inline-block">Difficultée :</b> @for($i = 0; $i < $recipe->difficulty; $i++) <img
+                            src="{{asset('img/icons/chef.png')}}" style="width: 15px;"> @endfor</p>
                 <p><b>Nombre de personnes :</b>&nbsp;{{ $recipe->persons }}</p>
                 <p><b>Prix :</b>&nbsp;{{ $recipe->price }} €</p>
                 <p><b>Prix/personnes :</b>&nbsp;{{ round($recipe->price/$recipe->persons, 2) }} €</p>
-                <a href="{{ route('recipes.print',$recipe->id) }}" class="btn btn-success btn-flat"><i class="fa fa-download"></i> Télécharger</a>
+                <a href="{{ route('recipes.print',$recipe->id) }}" class="btn btn-success btn-flat"><i
+                            class="fa fa-download"></i> Télécharger</a>
                 <span class="btn btn-success btn-flat pull-right" onclick="window.print()"><i class="fa fa-print"></i> Imprimer</span>
             </div>
             <div class="box-footer">

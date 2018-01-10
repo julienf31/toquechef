@@ -247,4 +247,9 @@ class RecipesController extends BaseController
         return $pdf->download("Toque Chef - $recipe->name");
     }
 
+    public function randomRecipe(){
+        $recipe = Recipe::orderBy(DB::raw('RAND()'))->first();
+        return Redirect::route('recipes.details', $recipe->id);
+    }
+
 }

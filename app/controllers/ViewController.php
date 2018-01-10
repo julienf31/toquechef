@@ -6,7 +6,12 @@ class ViewController extends BaseController
     //Home view
     public function showHome()
     {
-        return View::make('home');
+        $data['recipes'] = count(Recipe::all());
+        $data['ingredients'] = count(Ingredient::all());
+        $data['users'] = count(User::all());
+        $data['comments'] = count(Comment::all());
+
+        return View::make('home', $data);
     }
 
     //Login view

@@ -1,7 +1,7 @@
 @extends('template.theme')
 
 @section('title')
-    Résultat de la recherche pour : {{ $keyword }}
+    Recherche
 @stop
 
 @section('mainPage')
@@ -13,6 +13,11 @@
 @stop
 
 @section('content')
+    <div class="col-md-12">
+        <p class="lead"><strong class="text-green">{{ $count }}</strong> resultats pour <strong
+                    class="text-green">{{ $keyword }}</strong></p>
+        <div style="border-top: 1px solid black;"></div>
+    </div>
     <style type="text/css">
         .carousel-inner > .item > img, .carousel-inner > .item > a > img {
             width: 100%;
@@ -20,7 +25,7 @@
         }
     </style>
     <div class="container-fluid">
-        <h2>Recettes <span class="badge bg-green">{{ count($recipes) }}</span> </h2>
+        <h2>Recettes <span class="badge bg-green">{{ count($recipes) }}</span></h2>
         <hr style="border-color: #00a65a;">
         <div class="row">
             @if(count($recipes)>0)

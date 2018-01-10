@@ -96,6 +96,11 @@
                     <i class="fa fa-clock-o"></i> <span>Derniéres Recettes</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('recipes.random') }}">
+                    <i class="fa fa-random"></i> <span>Recette aléatoire</span>
+                </a>
+            </li>
 
         </ul>
     </section>

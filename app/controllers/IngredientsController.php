@@ -7,7 +7,7 @@ class IngredientsController extends BaseController
     {
         $ingredient = Input::get('ingredientName');
 
-        if(count(Ingredient::where('name', 'like', '%'.$ingredient.'%')->get()) == 0){
+        if(count(Ingredient::where('name', 'like', $ingredient.'%')->get()) == 0){
             $ing = new Ingredient();
             $ing->name = $ingredient;
             $ing->save();

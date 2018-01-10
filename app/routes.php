@@ -27,6 +27,8 @@ Route::get('/recipe/{id}/print', array('as' => 'recipes.print', 'uses' => 'Recip
 
 Route::get('/last', array('as' => 'recipes.last', 'uses' => 'ViewController@showLastRecipes'));
 
+Route::get('/recipe/random', array('as' => 'recipes.random', 'uses' => 'RecipesController@randomRecipe'));
+
 Route::get('/recipe/{id}', array('as' => 'recipes.details', 'uses' => 'ViewController@showRecipeDetails'));
 
 Route::post('/search', array('as' => 'search', 'uses' => 'SearchController@search'));
