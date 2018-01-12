@@ -27,7 +27,7 @@ class SearchController extends BaseController
             foreach($multiple as $param){
                 $param = '%'.$param.'%';
             }
-            $data['similarIngredients'] = Ingredient::whereIn('name', 'like', $param)->get();
+            $data['similarIngredients'] = Ingredient::whereIn('name', 'like', $multiple)->get();
         } else {
             $data['ingredients'] = $this->launchIngredientsSearch($params);
             $data['similarIngredients'] = Ingredient::where('name', 'like', '%' . $params . '%')->get();
