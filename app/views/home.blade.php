@@ -11,7 +11,7 @@
         recettes de nos utilisateurs sans créer de compte, ou créer un compte pour partager vos recettes, commenter les
         recettes des autres utilisateurs, ou ajouter des recettes à votre portefeuille de recettes.
         <div class="row margin">
-            @if(!Auth::guest())
+            @if(!Auth::user())
                 <a href="{{ route('login') }}" class="btn btn-flat btn-success">Connectez-vous</a>
                 <a href="{{ route('register') }}" class="btn btn-flat btn-warning">Inscrivez-vous</a>
             @endif
