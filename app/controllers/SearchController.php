@@ -24,10 +24,12 @@ class SearchController extends BaseController
 
         if (sizeof($multiple) > 1) {
             $data['ingredients'] = $this->launchMultipleIngredientsSearch($multiple);
-            foreach($multiple as $param){
-                $param = '%'.$param.'%';
-            }
-            $data['similarIngredients'] = Ingredient::whereIn('name', 'like', $multiple)->get();
+        
+            $data['similarIngredients'] = Ingredient::where(function ($query) use($multiple) {
+             for ($i = 0; $i < count($multiple); $i++){
+                $query->orwhere('name', 'like',  '%' . $multiple[$i] .'%');
+             }      
+        })->get();
         } else {
             $data['ingredients'] = $this->launchIngredientsSearch($params);
             $data['similarIngredients'] = Ingredient::where('name', 'like', '%' . $params . '%')->get();
