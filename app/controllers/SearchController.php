@@ -24,18 +24,23 @@ class SearchController extends BaseController
 
         if (sizeof($multiple) > 1) {
             $data['ingredients'] = $this->launchMultipleIngredientsSearch($multiple);
+        
+            $data['similarIngredients'] = Ingredient::where(function ($query) use($multiple) {
+             for ($i = 0; $i < count($multiple); $i++){
+                $query->orwhere('name', 'like',  '%' . $multiple[$i] .'%');
+             }      
+        })->get();
         } else {
             $data['ingredients'] = $this->launchIngredientsSearch($params);
+            $data['similarIngredients'] = Ingredient::where('name', 'like', '%' . $params . '%')->get();
         }
         $data['recipes'] = $this->launchRecipesSearch($params);
         $data['categories'] = $this->launchCategoriesSearch($params);
         $data['keyword'] = $params;
         $data['count'] = count($data['recipes']) + count($data['ingredients']) + count($data['categories']);
 
-        $data['similarIngredients'] = Ingredient::where('name', 'like', '%' . $params . '%')->get();
 
         return View::make('search.results', $data);
-
     }
 
     /**

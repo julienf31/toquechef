@@ -151,6 +151,9 @@ class ViewController extends BaseController
      */
     public function showLogin()
     {
+        if(Auth::user()){
+            return Redirect::route('home');
+        }
         return View::make('login');
     }
 
@@ -250,6 +253,9 @@ class ViewController extends BaseController
      */
     public function showRegister()
     {
+        if(Auth::user()){
+            return Redirect::route('home');
+        }
         return View::make('register');
     }
 
