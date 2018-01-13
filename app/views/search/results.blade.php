@@ -44,7 +44,7 @@
             </div>
             <div class="row">
                 <div class="col-md-10 col-md-offset-1 text-center">
-                    Ingrédients similaires :<br >
+                    <h3>Ingrédients similaires :</h3>
                     @foreach($similarIngredients as $similarIngredient)
                         <a href="{{ route('search.ingredients', $similarIngredient->id) }}">
                             <small class="label bg-green">{{ $similarIngredient->name }}</small>

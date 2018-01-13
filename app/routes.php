@@ -76,4 +76,7 @@ Route::group(array('before' => 'auth'), function () {
     Route::post('/recipe/{id}/comment', array('as' => 'comments.add', 'uses' => 'RecipesController@addComment'));
     Route::get('/comment/{id}/delete', array('as' => 'comments.delete', 'uses' => 'RecipesController@deleteComment'));
 
+    Route::post('/recipe/image/delete/{id}', array('as' => 'recipes.delete.image', 'uses' => 'RecipesController@deleteImage'));
+    Route::post('/recipe/image/add/{id}', array('as' => 'recipes.add.image', 'uses' => 'RecipesController@addImage'));
+
 });

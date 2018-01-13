@@ -20,6 +20,10 @@ class SearchController extends BaseController
     public function search()
     {
         $params = Input::get('search');
+        if(strlen(str_replace(' ','',$params)) == 0){
+            Session::flash('danger-notif', "Veuillez saisir une recherche valide");
+            return Redirect::route('home');
+        }
         $multiple = explode(' ', $params);
 
         if (sizeof($multiple) > 1) {

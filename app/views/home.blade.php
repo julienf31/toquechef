@@ -18,7 +18,7 @@
         </div>
     </div>
     <br/>
-    <div class="col-md-12 text-center bg-green margin">
+    <div class="col-md-12 text-center bg-green">
         <h3 class="text-white">Rechercher une recette :</h3>
         <form action="{{ route('search') }}" method="post" class="">
             <div class="input-group col-md-6 col-md-offset-3">

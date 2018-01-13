@@ -24,6 +24,10 @@
                     <div class="col-lg-10 col-md-12">
                         {{ HTML::input('name', 'Nom de la recette', 'Nom', $errors, $recipe->name) }}
                         {{ HTML::textarea('desc', 'Description de la recette', 'Description', $errors, $recipe->description) }}
+                        <label for="image">Gestion des images</label>
+                        <span id="img" class="help-block"><a data-toggle="modal" data-target="#modal-img">Modifier les images de la recette</a> </span>
+
+
                         <div class="form-group {{ ($errors->has('category')) ? 'has-error':'' }}">
                             <label for="categoty">Catégorie</label>
                             <select class="form-control select2 select2-hidden-accessible" name="category"
@@ -123,6 +127,51 @@
                     <button type="submit" class="btn btn-success pull-right btn-flat">Ajouter</button>
                 </div>
                 {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-img">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">Gestion des images :</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ Form::open( array('route' => array('recipes.add.image', $recipe->id), 'files' => true)) }}
+                            <div class="form-group {{ $errors->has('img') ? 'has-error' : ''}}">
+                                <label for="img">Ajouter une image</label>
+                                <input type="file" name="img">
+                                <span id="file" class="help-block">Un ou plusieurs fichiers, 2Mo max, JPEG, PNG</span>
+                                @if($errors->has('img'))
+                                    <span class="help-block">{{ $errors->first('img') }}</span>
+                                @endif
+
+                            </div>
+                            <button type="submit" class="btn btn-success pull-right btn-flat">Ajouter</button><br><hr>
+                            {{ Form::close() }}
+                            @foreach($recipe->images as $key => $image)
+                                {{ Form::open( array('route' => array('recipes.delete.image', $image->id))) }}
+                                <div class="form-group">
+                                    <label>Image {{$key +1}}</label>
+                                    <button type="submit" class="no_button"><i
+                                                class="fa fa-trash-o pull-right text-red"></i></button>
+                                    <p>Ajoutée le : {{ $image->created_at }}</p>
+                                    <img class="img-responsive"
+                                         src="{{ asset("uploads/recipes/$recipe->id/$image->name") }}">
+                                    <hr>
+                                </div>
+                                {{ Form::close() }}
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-flat pull-left" data-dismiss="modal">Retour</button>
+                </div>
             </div>
         </div>
     </div>

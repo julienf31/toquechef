@@ -34,6 +34,45 @@ class RecipesController extends BaseController
 
     /**
      *
+     * Add Recipe Image
+     * Auth Required, user()->id must match with recipe->owner
+     *
+     * @return      Redirect
+     *
+     */
+    public function addImage($id)
+    {
+        $recipe = Recipe::find($id);
+        if (Auth::user()->id != $recipe->owner_id) {
+            Session::flash('danger-notif', "Accés interdit");
+            return Redirect::route('recipes.details', $recipe->id);
+        }
+        $filesRules = array('img' => 'image');
+
+        $file = Input::file('img');
+
+        if ($file->isValid()) {
+            $validator = Validator::make(array('img' => $file), $filesRules);
+
+            if ($validator->fails()) {
+
+            } else {
+                $fileName = md5($file->getClientOriginalName());
+                $fileExt = $file->getClientOriginalExtension();
+                $file->move('uploads/recipes/' . $id, $fileName . '.' . $fileExt);
+
+                $image = new Image();
+                $image->name = $fileName . '.' . $fileExt;
+                $image->recipe_id = $id;
+                $image->save();
+            }
+        }
+        Session::flash('success-notif', "Image ajoutée");
+        return Redirect::route('recipes.edit', $image->recipe_id);
+    }
+
+    /**
+     *
      * Add Recipe
      * Auth Required
      *
@@ -101,8 +140,8 @@ class RecipesController extends BaseController
             $ing->recipe_id = $recipeId;
             $ing->save();
         }
-
-        return Redirect::route('home');
+        Session::flash('success-notif', "La recette à bien été créée");
+        return Redirect::route('recipes.details', $recipeId);
     }
 
     /**
@@ -118,6 +157,7 @@ class RecipesController extends BaseController
     {
         $recipe = Recipe::find($id);
         if (Auth::user()->id != $recipe->owner_id) {
+            Session::flash('danger-notif', "Accés interdit");
             return Redirect::back();
         }
         $step = new Step();
@@ -141,11 +181,39 @@ class RecipesController extends BaseController
     {
         $comment = Comment::find($id);
         if (Auth::user()->id != $comment->profile_id) {
+            Session::flash('danger-notif', "Accés interdit");
             return Redirect::back();
         }
         $comment->delete();
 
+        Session::flash('success-notif', "Le commentaire à bien été supprimé");
         return Redirect::route('recipes.details', $comment->recipe_id);
+    }
+
+    /**
+     *
+     * Delete Recipe Image
+     *  Auth Required, user()->id must match with recipe->owner
+     *
+     * @return      Redirect
+     *
+     */
+    public function deleteImage($id)
+    {
+        $image = Image::find($id);
+        if (Auth::user()->id != $image->recipe->owner_id) {
+            Session::flash('danger-notif', "Accés interdit");
+            return Redirect::route('recipe.details', $image->recipe_id);
+        }
+
+        if(Image::where('recipe_id',$image->recipe_id)->count() > 1){
+            File::delete("uploads/recipes/$image->recipe_id/$image->name");
+            $image->delete();
+            Session::flash('success-notif', "L'image à bien été supprimée");
+        }else{
+            Session::flash('danger-notif', "Vous ne pouvez pas supprimé la derniére image de la recette");
+        }
+        return Redirect::route('recipes.edit', $image->recipe_id);
     }
 
     /**
@@ -160,8 +228,13 @@ class RecipesController extends BaseController
     public function deleteRecipe($id)
     {
         $recipe = Recipe::find($id);
+        if (Auth::user()->id != $recipe->owner_id) {
+            Session::flash('danger-notif', "Accés interdit");
+            return Redirect::back();
+        }
         $recipe->delete();
 
+        Session::flash('danger-notif', "La recette à bien été supprimée");
         return Redirect::route('recipes.my');
     }
 
@@ -208,12 +281,14 @@ class RecipesController extends BaseController
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
+            Session::flash('danger-notif', "Erreur de saisie des champs");
             return Redirect::route('recipes.edit', $id)->withErrors($validator)->withInput();
         }
 
         $recipe = Recipe::find($id);
 
         if (Auth::user()->id != $recipe->owner_id) {
+            Session::flash('danger-notif', "Accés interdit");
             return Redirect::back();
         }
         $recipe->name = Input::get('name');
