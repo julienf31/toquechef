@@ -219,6 +219,9 @@ class ViewController extends BaseController
      */
     public function showRecipeDetails($id)
     {
+        if(!Recipe::find($id)){
+            return View::make('errors.404');
+        }
         $data['hasMainPage'] = true;
         $data['recipe'] = Recipe::find($id);
         $data['ingredients'] = Recipe::find($id)->ingredients;
