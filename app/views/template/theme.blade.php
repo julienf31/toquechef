@@ -39,6 +39,8 @@
 @include('template.parts.menu')
 
     <div class="content-wrapper">
+        @section('alert')
+        @show
         <section class="content-header">
             <h1>
                 @yield('title')

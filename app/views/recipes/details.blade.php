@@ -15,7 +15,8 @@
 @section('content')
     <style type="text/css" xmlns="http://www.w3.org/1999/html">
         .carousel-inner > .item > img, .carousel-inner > .item > a > img {
-            width: 100%;
+            text-align: center;
+            max-width: 100%;
             height: 300px;
         }
 

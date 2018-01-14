@@ -206,11 +206,11 @@ class RecipesController extends BaseController
             return Redirect::route('recipe.details', $image->recipe_id);
         }
 
-        if(Image::where('recipe_id',$image->recipe_id)->count() > 1){
+        if (Image::where('recipe_id', $image->recipe_id)->count() > 1) {
             File::delete("uploads/recipes/$image->recipe_id/$image->name");
             $image->delete();
             Session::flash('success-notif', "L'image à bien été supprimée");
-        }else{
+        } else {
             Session::flash('danger-notif', "Vous ne pouvez pas supprimé la derniére image de la recette");
         }
         return Redirect::route('recipes.edit', $image->recipe_id);

@@ -4,6 +4,18 @@
     Accueil
 @stop
 
+@section('alert')
+    @if(!Auth::user())
+    <div class="alert alert-info alert-dismissible no-margin" style="border-radius: 0;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-info"></i> Site de démonstration!</h4>
+        Bonjour <b>visiteur</b>, vous êtes sur la version de démonstration, pour tester toutes les features inscrivez vous ou utilisez le compte suivant :
+        <p><b>Login :</b> demo@toquechef.fr</p>
+        <p><b>Password :</b> toquechef</p>
+    </div>
+    @endif
+@stop
+
 @section('content')
     <div class="col-md-offset-2 col-md-8 text-center ">
         <h3>Bienvenue sur ToqueChef</h3>
