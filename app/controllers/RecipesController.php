@@ -66,9 +66,12 @@ class RecipesController extends BaseController
                 $image->recipe_id = $id;
                 $image->save();
             }
+            Session::flash('success-notif', "Image ajoutée");
+            return Redirect::route('recipes.edit', $image->recipe_id);
         }
-        Session::flash('success-notif', "Image ajoutée");
-        return Redirect::route('recipes.edit', $image->recipe_id);
+        
+        Session::flash('danger-notif', "Image non ajoutée");
+        return Redirect::route('recipes.edit', $id);
     }
 
     /**
@@ -82,6 +85,7 @@ class RecipesController extends BaseController
     public function addRecipes()
     {
         Input::flashExcept('img');
+        $validImg = false;
 
         $rules = array(
             'name' => 'required|min:3',
@@ -115,6 +119,7 @@ class RecipesController extends BaseController
 
         foreach ($files as $file) {
             if ($file->isValid()) {
+                $validImg = true;
                 $validator = Validator::make(array('img' => $file), $filesRules);
 
                 if ($validator->fails()) {
@@ -131,7 +136,14 @@ class RecipesController extends BaseController
                 }
             }
         }
-
+        
+        if(!$validImg){
+            $recipe = Recipe::find($recipe->id);
+            $recipe->delete();
+            Session::flash('danger-notif', "Erreur d'image");
+            return Redirect::route('recipes.add')->withInput();
+        }
+        
         $ingredients = Input::get('ingredients');
 
         foreach ($ingredients as $ingredient) {
