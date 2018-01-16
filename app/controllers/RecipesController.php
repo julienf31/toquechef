@@ -138,7 +138,7 @@ class RecipesController extends BaseController
         }
         
         if(!$validImg){
-            $recipe = Recipe::find($recipe->id);
+            $recipe = Recipe::find($recipeId);
             $recipe->delete();
             Session::flash('danger-notif', "Erreur d'image");
             return Redirect::route('recipes.add')->withInput();
