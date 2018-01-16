@@ -64,7 +64,7 @@ class ViewController extends BaseController
         if (Auth::user()->id != $data['recipe']->owner_id) {
             return Redirect::route('recipes.details', $data['recipe']->id);
         }
-        $ingredients = Recipe::find($id)->ingredients('name')->get();
+        $ingredients = Recipe::find($id)->ingredients()->get();
         $data['recipeIngredients'] = $ingredients->toArray();
         $data['ingredients'] = Ingredient::all();
         $data['categories'] = Config::get('params.categories');

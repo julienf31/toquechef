@@ -26,9 +26,11 @@ class IngredientsController extends BaseController
             $ing = new Ingredient();
             $ing->name = $ingredient;
             $ing->save();
+            Session::flash('success-notif', "Ingrédient $ing->name ajouté");
             return Redirect::route('recipes.add');
         }
-        return Redirect::route('recipes.add')->withErrors("<i class=\"fa fa-warning\"></i> &nbsp;L'ingredient n'as pas été créer");
+        Session::flash('danger-notif', "L'ingrédient $ingredient n'as pas été créer, il existe déja un ingrédient similaire");
+        return Redirect::route('recipes.add');
     }
 
 }

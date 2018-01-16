@@ -44,7 +44,7 @@
                                     multiple="true" data-placeholder="Ingrédients" style="width: 100%;" tabindex="-1"
                                     aria-hidden="true">
                                 @foreach($ingredients as $ingredient)
-                                    <option value="{{ $ingredient->id }}" {{ (in_array($ingredient->name, array_column($recipeIngredients,'name'))) ? 'selected':'' }}> {{ ucfirst($ingredient->name) }} </option>
+                                    <option value="{{ $ingredient->id }}" {{ (in_array($ingredient->id, array_column($recipeIngredients,'id'))) ? 'selected':'' }}> {{ ucfirst($ingredient->name) }} </option>
                                 @endforeach
                             </select>
                             @if($errors->has('ingredients'))
